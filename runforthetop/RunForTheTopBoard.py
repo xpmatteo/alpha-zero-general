@@ -44,6 +44,7 @@ class Board():
                     count -= 1
         return count
 
+    # public
     def get_legal_moves(self, color):
         """Returns all the legal moves for the given color.
         (1 for white, -1 for black
@@ -51,10 +52,10 @@ class Board():
         moves = set()  # stores the legal moves.
 
         # Get all the squares with pieces of the given color.
-        for y in range(self.n):
-            for x in range(self.n):
-                if self[x][y]==color:
-                    newmoves = self.get_moves_for_square((x,y))
+        for c in range(self.n):
+            for r in range(self.n):
+                if self[r][c] == color:
+                    newmoves = self.get_moves_for_square((r,c))
                     moves.update(newmoves)
         return list(moves)
 
@@ -67,21 +68,22 @@ class Board():
                         return True
         return False
 
+    # --- private methods ---
+
     def get_moves_for_square(self, square):
         """Returns all the legal moves that use the given square as a base.
-        That is, if the given square is (3,4) and it contains a black piece,
-        and (3,5) and (3,6) contain white pieces, and (3,7) is empty, one
-        of the returned moves is (3,7) because everything from there to (3,4)
-        is flipped.
+        (r,c) must be a valid square and must contain a piece of a given color.
+        the available moves are all the orthogonal and diagonal squares,
+        minus the squares occupied by pieces of the any color.
         """
-        (x,y) = square
+        (r,c) = square
 
         # determine the color of the piece.
-        color = self[x][y]
+        color = self[r][c]
 
         # skip empty source squares.
-        if color==0:
-            return None
+        if color == 0:
+            raise Exception("No piece at "+str(square))
 
         # search all possible directions.
         moves = []
@@ -161,3 +163,9 @@ class Board():
             move=list(map(sum,zip(move,direction)))
             #move = (move[0]+direction[0],move[1]+direction[1])
 
+    def _adjacent_squares(self, square):
+        """ Returns the list of squares adjacent to the given square """
+        return [self._add_square(square, direction) for direction in self.__directions]
+
+    def _add_square(self, square, direction):
+        return (square[0]+direction[0], square[1]+direction[1])
