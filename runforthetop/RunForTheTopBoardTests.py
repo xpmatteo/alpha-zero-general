@@ -3,13 +3,19 @@ from runforthetop.RunForTheTopBoard import Board
 
 
 class RunForTheTopLogicTests(unittest.TestCase):
-    def test_directions(self):
+    def test_adjacent_squares(self):
         board = Board()
         actual = board._adjacent_squares((2, 4))
         expected = [(3, 3), (3, 4), (3, 5),
                     (2, 3),         (2, 5),
                     (1, 3), (1, 4), (1, 5)]
         self.assertEqual(set(expected), set(actual))
+
+    def test_adjacent_valid_squares(self):
+        board = Board()
+        expected = [(1, 0), (1, 1),
+                            (0, 1)]
+        self.assertEqual(set(expected), set(board._adjacent_on_board_squares((0, 0))))
 
     def xtest_available_moves_in_initial_board(self):
         """

@@ -169,3 +169,10 @@ class Board():
 
     def _add_square(self, square, direction):
         return (square[0]+direction[0], square[1]+direction[1])
+
+    def _adjacent_on_board_squares(self, square):
+        return [square for square in self._adjacent_squares(square)
+                if self._is_on_board_square(square)]
+
+    def _is_on_board_square(self, square):
+        return 0 <= square[0] < self.n and 0 <= square[1] < self.n
