@@ -32,10 +32,11 @@ class RunForTheTopTests(unittest.TestCase):
         next_state = game.getNextState(board, player, action)
         self.assertEqual(board, game.getInitBoard(), "original board should not be modified")
 
-    def xtest_available_moves(self):
-        game = RunForTheTopGame(8)
+    def test_available_moves(self):
+        game = RunForTheTopGame()
         moves = game.getValidMoves(game.getInitBoard(), 1)
-        self.assertEqual(moves, [8, 9, 10, 11])
+        self.assertEqual(8*8*8*8 + 1, len(moves), "should be one move per square squared plus pass")
+        self.assertEqual(1, moves[8**4], "Pass is always a valid move")
 
 
 
