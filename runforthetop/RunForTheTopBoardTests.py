@@ -17,6 +17,12 @@ class RunForTheTopLogicTests(unittest.TestCase):
                             (0, 1)]
         self.assertEqual(set(expected), set(board._adjacent_on_board_squares((0, 0))))
 
+    def test_available_moves_from_square(self):
+        board = Board()
+        expected = [(6, 1), (6, 2), (6, 3),
+                    (7, 1)]
+        self.assertEqual(set(expected), set(board._available_moves_from_square((7, 2))))
+
     def xtest_available_moves_in_initial_board(self):
         """
     0 1 2 3 4 5 6 7
