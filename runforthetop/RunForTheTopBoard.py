@@ -7,8 +7,9 @@ class Board():
       1=white, -1=black, 0=empty
       first dim is row , 2nd is col:
          pieces[1][7] is the square in row 1, column 7
-    Squares are stored and manipulated as (r,c) tuples.
-    r is the row, c is the col.
+    Squares are stored and manipulated as (r,c) tuples,
+    where r is the row, c is the col.
+    Moves are pairs of the form (from_square, to_square).
     """
 
     # list of all 8 directions on the board, as (x,y) offsets
@@ -47,7 +48,7 @@ class Board():
     # public
     def get_legal_moves(self, color):
         """Returns all the legal moves for the given color.
-        (1 for white, -1 for black
+        1 for white O, -1 for black X
         """
         moves = set()  # stores the legal moves.
 
@@ -55,10 +56,11 @@ class Board():
         for c in range(self.n):
             for r in range(self.n):
                 if self[r][c] == color:
-                    newmoves = self.get_moves_for_square((r,c))
+                    newmoves = self._available_moves_from_square((r,c))
                     moves.update(newmoves)
         return list(moves)
 
+    # public
     def has_legal_moves(self, color):
         for y in range(self.n):
             for x in range(self.n):
@@ -68,87 +70,16 @@ class Board():
                         return True
         return False
 
+
+    def execute_move(self, move):
+        from_square, to_square = move
+        if self[from_square[0]][from_square[1]] == 0:
+            raise ValueError("No piece at from_square")
+        self[to_square[0]][to_square[1]] = self[from_square[0]][from_square[1]]
+        self[from_square[0]][from_square[1]] = 0
+
+
     # --- private methods ---
-
-    def get_moves_for_square(self, square):
-        """Returns all the legal moves that use the given square as a base.
-        (r,c) must be a valid square and must contain a piece of a given color.
-        the available moves are all the orthogonal and diagonal squares,
-        minus the squares occupied by pieces of the any color.
-        """
-        (r,c) = square
-
-        # determine the color of the piece.
-        color = self[r][c]
-
-        # skip empty source squares.
-        if color == 0:
-            raise Exception("No piece at "+str(square))
-
-        # search all possible directions.
-        moves = []
-        for direction in self.__directions:
-            move = self._discover_move(square, direction)
-            if move:
-                # print(square,move,direction)
-                moves.append(move)
-
-        # return the generated move list
-        return moves
-
-    def execute_move(self, move, color):
-        """Perform the given move on the board; flips pieces as necessary.
-        color gives the color pf the piece to play (1=white,-1=black)
-        """
-
-        #Much like move generation, start at the new piece's square and
-        #follow it on all 8 directions to look for a piece allowing flipping.
-
-        # Add the piece to the empty square.
-        # print(move)
-        flips = [flip for direction in self.__directions
-                      for flip in self._get_flips(move, direction, color)]
-        assert len(list(flips))>0
-        for x, y in flips:
-            #print(self[x][y],color)
-            self[x][y] = color
-
-    def _discover_move(self, origin, direction):
-        """ Returns the endpoint for a legal move, starting at the given origin,
-        moving by the given increment."""
-        x, y = origin
-        color = self[x][y]
-        flips = []
-
-        for x, y in Board._increment_move(origin, direction, self.n):
-            if self[x][y] == 0:
-                if flips:
-                    # print("Found", x,y)
-                    return (x, y)
-                else:
-                    return None
-            elif self[x][y] == color:
-                return None
-            elif self[x][y] == -color:
-                # print("Flip",x,y)
-                flips.append((x, y))
-
-    def _get_flips(self, origin, direction, color):
-        """ Gets the list of flips for a vertex and direction to use with the
-        execute_move function """
-        #initialize variables
-        flips = [origin]
-
-        for x, y in Board._increment_move(origin, direction, self.n):
-            #print(x,y)
-            if self[x][y] == 0:
-                return []
-            if self[x][y] == -color:
-                flips.append((x, y))
-            elif self[x][y] == color and len(flips) > 0:
-                #print(flips)
-                return flips
-        return []
 
     def _adjacent_squares(self, square):
         """ Returns the list of squares adjacent to the given square """
