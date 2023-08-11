@@ -1,25 +1,21 @@
 
 
 class Board():
-    '''
-    Author: Eric P. Nichols
-    Date: Feb 8, 2008.
-    Board class.
+    """
+    Author: Eric P. Nichols; modified by Matteo Vaccari
     Board data:
       1=white, -1=black, 0=empty
-      first dim is column , 2nd is row:
-         pieces[1][7] is the square in column 2,
-         at the opposite end of the board in row 8.
-    Squares are stored and manipulated as (x,y) tuples.
-    x is the column, y is the row.
-    '''
+      first dim is row , 2nd is col:
+         pieces[1][7] is the square in row 1, column 7
+    Squares are stored and manipulated as (r,c) tuples.
+    r is the row, c is the col.
+    """
 
     # list of all 8 directions on the board, as (x,y) offsets
     __directions = [(1,1),(1,0),(1,-1),(0,-1),(-1,-1),(-1,0),(-1,1),(0,1)]
 
     def __init__(self, n=8):
-        "Set up initial board configuration."
-
+        """Set up initial board configuration."""
         self.n = n
         # Create the empty board array.
         self.pieces = [None]*self.n
@@ -32,8 +28,8 @@ class Board():
         self.pieces[7][4] = -1
         self.pieces[7][5] = -1
 
-    # add [][] indexer syntax to the Board
-    def __getitem__(self, index): 
+    def __getitem__(self, index):
+        """add [][] indexer syntax to the Board"""
         return self.pieces[index]
 
     def countDiff(self, color):
