@@ -2,19 +2,15 @@ from __future__ import print_function
 import sys
 sys.path.append('..')
 from Game import Game
-from .RunForTheTopLogic import Board
+from .RunForTheTopBoard import Board
 import numpy as np
 
 class RunForTheTopGame(Game):
-    square_content = {
+    square_display_rep = {
         -1: "X",
         +0: "-",
         +1: "O"
     }
-
-    @staticmethod
-    def getSquarePiece(piece):
-        return RunForTheTopGame.square_content[piece]
 
     def __init__(self, n):
         super().__init__()
@@ -94,7 +90,7 @@ class RunForTheTopGame(Game):
         return board.tostring()
 
     def stringRepresentationReadable(self, board):
-        board_s = "".join(self.square_content[square] for row in board for square in row)
+        board_s = "".join(self.square_display_rep[square] for row in board for square in row)
         return board_s
 
     def getScore(self, board, player):
@@ -115,7 +111,7 @@ class RunForTheTopGame(Game):
             result += str(y) + " |"   # print the row #
             for x in range(n):
                 piece = board[y][x]    # get the piece to print
-                result += RunForTheTopGame.square_content[piece] + " "
+                result += RunForTheTopGame.square_display_rep[piece] + " "
 
             result += "|\n"
         result += "-----------------------\n"

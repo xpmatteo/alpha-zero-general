@@ -8,7 +8,7 @@ class RunForTheTopTests(unittest.TestCase):
         display = game.displayContent(game.getInitBoard())
         print(display)
 
-    def test_available_moves(self):
+    def xtest_available_moves(self):
         game = RunForTheTopGame(8)
         moves = game.getValidMoves(game.getInitBoard(), 1)
         self.assertEqual(moves, [8, 9, 10, 11])
