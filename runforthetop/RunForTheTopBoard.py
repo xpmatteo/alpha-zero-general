@@ -177,6 +177,6 @@ class Board():
     def _is_on_board_square(self, square):
         return 0 <= square[0] < self.n and 0 <= square[1] < self.n
 
-    def _available_moves_from_square(self, square):
-        return [square for square in self._adjacent_on_board_squares(square)
-                if self[square[0]][square[1]] == 0]
+    def _available_moves_from_square(self, from_square):
+        return [(from_square, to_square) for to_square in self._adjacent_on_board_squares(from_square)
+                if self[to_square[0]][to_square[1]] == 0]

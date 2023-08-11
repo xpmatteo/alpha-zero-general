@@ -19,9 +19,10 @@ class RunForTheTopLogicTests(unittest.TestCase):
 
     def test_available_moves_from_square(self):
         board = Board()
-        expected = [(6, 1), (6, 2), (6, 3),
-                    (7, 1)]
-        self.assertEqual(set(expected), set(board._available_moves_from_square((7, 2))))
+        sq = (7, 2)
+        expected = [(sq, (6, 1)), (sq, (6, 2)), (sq, (6, 3)),
+                    (sq, (7, 1))]
+        self.assertEqual(set(expected), set(board._available_moves_from_square(sq)))
 
     def xtest_available_moves_in_initial_board(self):
         """
@@ -39,7 +40,8 @@ class RunForTheTopLogicTests(unittest.TestCase):
         """
         board = Board()
         actual = board.get_legal_moves(1)
-        expected = [(6, 2), (6, 3)]
+        expected = [(6, 1), (6, 2), (6, 3),
+                    (7, 1)]
         self.assertEqual(expected, actual)
 
 
