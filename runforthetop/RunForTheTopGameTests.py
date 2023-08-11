@@ -38,5 +38,7 @@ class RunForTheTopTests(unittest.TestCase):
         self.assertEqual(8*8*8*8 + 1, len(moves), "should be one move per square squared plus pass")
         self.assertEqual(1, moves[8**4], "Pass is always a valid move")
 
+    
+
 
 

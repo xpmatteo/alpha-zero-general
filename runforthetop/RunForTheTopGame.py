@@ -49,14 +49,11 @@ class RunForTheTopGame(Game):
         # return a fixed size binary vector
         valids = [0]*self.getActionSize()
         valids[-1] = 1 # pass is always allowed
-        # b = Board(self.n)
-        # b.pieces = np.copy(board)
-        # legalMoves = b.get_legal_moves(player)
-        # if len(legalMoves)==0:
-        #     valids[-1]=1
-        #     return np.array(valids)
-        # for x, y in legalMoves:
-        #     valids[self.n*x+y]=1
+        b = Board(self.n)
+        b.pieces = np.copy(board)
+        legalMoves = b.get_legal_moves(player)
+        for (r1, c1), (r2, c2) in legalMoves:
+            valids[r1 + c1 * self.n + r2 * self.n ** 2 + c2 * self.n ** 3] = 1
         return np.array(valids)
 
     def getGameEnded(self, board, player):
