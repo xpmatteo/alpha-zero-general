@@ -33,17 +33,13 @@ class Board():
         """add [][] indexer syntax to the Board"""
         return self.pieces[index]
 
-    def countDiff(self, color):
-        """Counts the # pieces of the given color
-        (1 for white, -1 for black, 0 for empty spaces)"""
-        count = 0
-        for y in range(self.n):
-            for x in range(self.n):
-                if self[x][y]==color:
-                    count += 1
-                if self[x][y]==-color:
-                    count -= 1
-        return count
+    def at(self, square):
+        """ get square color from a pair (r,c) """
+        return self[square[0]][square[1]]
+
+    def set(self, square, color):
+        """ set color of square (r,c)"""
+        self[square[0]][square[1]] = color
 
     # public
     def get_legal_moves(self, color):
@@ -70,14 +66,13 @@ class Board():
                         return True
         return False
 
-
     def execute_move(self, move):
         from_square, to_square = move
-        if self[from_square[0]][from_square[1]] == 0:
+        color = self.at(from_square)
+        if color == 0:
             raise ValueError("No piece at from_square")
-        self[to_square[0]][to_square[1]] = self[from_square[0]][from_square[1]]
-        self[from_square[0]][from_square[1]] = 0
-
+        self.set(to_square, color)
+        self.set(from_square, 0)
 
     # --- private methods ---
 
@@ -98,4 +93,5 @@ class Board():
 
     def _available_moves_from_square(self, from_square):
         return [(from_square, to_square) for to_square in self._adjacent_on_board_squares(from_square)
-                if self[to_square[0]][to_square[1]] == 0]
+                if self.at(to_square) == 0]
+
