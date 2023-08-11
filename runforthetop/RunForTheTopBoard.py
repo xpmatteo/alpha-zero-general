@@ -148,30 +148,18 @@ class Board():
             elif self[x][y] == color and len(flips) > 0:
                 #print(flips)
                 return flips
-
         return []
-
-    @staticmethod
-    def _increment_move(move, direction, n):
-        # print(move)
-        """ Generator expression for incrementing moves """
-        move = list(map(sum, zip(move, direction)))
-        #move = (move[0]+direction[0], move[1]+direction[1])
-        while all(map(lambda x: 0 <= x < n, move)): 
-        #while 0<=move[0] and move[0]<n and 0<=move[1] and move[1]<n:
-            yield move
-            move=list(map(sum,zip(move,direction)))
-            #move = (move[0]+direction[0],move[1]+direction[1])
 
     def _adjacent_squares(self, square):
         """ Returns the list of squares adjacent to the given square """
         return [self._add_square(square, direction) for direction in self.__directions]
 
-    def _add_square(self, square, direction):
+    @staticmethod
+    def _add_square(square, direction):
         return (square[0]+direction[0], square[1]+direction[1])
 
-    def _adjacent_on_board_squares(self, square):
-        return [square for square in self._adjacent_squares(square)
+    def _adjacent_on_board_squares(self, from_square):
+        return [square for square in self._adjacent_squares(from_square)
                 if self._is_on_board_square(square)]
 
     def _is_on_board_square(self, square):
