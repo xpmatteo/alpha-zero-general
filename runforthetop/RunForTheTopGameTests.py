@@ -29,7 +29,7 @@ class RunForTheTopTests(unittest.TestCase):
         board = game.getInitBoard()
         player = 1
         action = ((7, 2), (6, 1))
-        next_state = game.getNextState(board, player, action)
+        pieces, new_player = game.getNextState(board, player, action)
         self.assertEqual(board, game.getInitBoard(), "original board should not be modified")
 
     def test_available_moves(self):
@@ -38,7 +38,17 @@ class RunForTheTopTests(unittest.TestCase):
         self.assertEqual(8*8*8*8 + 1, len(moves), "should be one move per square squared plus pass")
         self.assertEqual(1, moves[8**4], "Pass is always a valid move")
 
-    
+    def test_encode_and_decode_of_moves(self):
+        moves = [
+            ((3, 7), (1, 4))
+            , ((0, 0), (0, 0))
+            , ((7, 7), (7, 7))
+        ]
+        game = RunForTheTopGame()
+        for move in moves:
+            encoded = game._from_move_to_numpy_action(move)
+            decoded = game._from_numpy_action_to_move(encoded)
+            self.assertEqual(move, decoded, "encoding and decoding should be inverse operations")
 
 
 

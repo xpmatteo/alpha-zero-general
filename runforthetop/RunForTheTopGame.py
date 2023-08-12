@@ -12,10 +12,10 @@ class RunForTheTopGame(Game):
         +1: "O"
     }
 
-    def __init__(self, n=8):
+    def __init__(self):
         super().__init__()
-        self.n = n
-        self.N_FOURTH_POWER = n**4
+        self.n = 8
+        self.N_FOURTH_POWER = 8**4
 
     def getInitBoard(self):
         # return initial board (numpy board)
@@ -40,8 +40,8 @@ class RunForTheTopGame(Game):
         if action == self._pass_action():
             return (board, -player)
         b = Board(self.n)
-        b.pieces = np.copy(board)
-        move = (int(action/self.n), action%self.n)
+        b.pieces = np.copy(board)        
+        move = self._from_numpy_action_to_move(action)
         b.execute_move(move, player)
         return (b.pieces, -player)
 
@@ -52,8 +52,8 @@ class RunForTheTopGame(Game):
         b = Board(self.n)
         b.pieces = np.copy(board)
         legalMoves = b.get_legal_moves(player)
-        for (r1, c1), (r2, c2) in legalMoves:
-            valids[r1 + c1 * self.n + r2 * self.n ** 2 + c2 * self.n ** 3] = 1
+        for move in legalMoves:
+            valids[self._from_move_to_numpy_action(move)] = 1
         return np.array(valids)
 
     def getGameEnded(self, board, player):
@@ -126,4 +126,20 @@ class RunForTheTopGame(Game):
 
     def _pass_action(self):
         return self.N_FOURTH_POWER
+
+    #
+
+    def _from_numpy_action_to_move(self, action):
+        c2 = action // self.n ** 3
+        remainder = action % self.n ** 3
+        r2 = remainder // self.n ** 2
+        remainder = action % self.n ** 2
+        c1 = remainder // self.n
+        r1 = action % self.n
+        return ((r1, c1), (r2, c2))
+
+    def _from_move_to_numpy_action(self, move):
+        """We encode the move as a base N number, where N is the board side length."""
+        (r1, c1), (r2, c2) = move
+        return r1 + c1 * self.n + r2 * self.n ** 2 + c2 * self.n ** 3
 
