@@ -133,14 +133,14 @@ class RunForTheTopGame(Game):
     def _from_move_to_numpy_action(self, move):
         """We encode the move as a base N number, where N is the board side length."""
         (r1, c1), (r2, c2) = move
-        return r1 + c1 * self.n + r2 * self.n ** 2 + c2 * self.n ** 3
+        return r1 + c1 * self.n + r2 * self.N_SQUARE + c2 * self.N_CUBE
 
     def _from_numpy_action_to_move(self, action):
         c2 = action // self.N_CUBE
-        remainder = action % self.N_CUBE
-        r2 = remainder // self.N_SQUARE
-        remainder = action % self.N_SQUARE
-        c1 = remainder // self.n
+        action = action % self.N_CUBE
+        r2 = action // self.N_SQUARE
+        action = action % self.N_SQUARE
+        c1 = action // self.n
         r1 = action % self.n
         return ((r1, c1), (r2, c2))
 
