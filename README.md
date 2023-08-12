@@ -1,3 +1,17 @@
+# Why this fork 
+
+I'm experimenting with adapting this framework to hex-and-counter wargames. Such games have significant differences from the usual abstract 2-player strategy games:
+
+* A player may move one or more pieces during their turn
+* The player turn is broken down in several phases, where units sometimes move, sometimes attack
+* Sometimes during a player'r turn, the opponent is asked to take decisions
+* There are many different types of units
+* The outcome of attacks is random
+
+In order to understand how to represent some of these things in the AlphaGo-General framework, 
+I'm planning a series of experimental mini-games.  The first one is RunToTheTop, where a player may move zero, one, or all their units during their turn.
+
+
 # Alpha Zero General (any game, any framework!)
 A simplified, highly flexible, commented and (hopefully) easy to understand implementation of self-play based reinforcement learning based on the AlphaGo Zero paper (Silver et al). It is designed to be easy to adopt for any two-player turn-based adversarial game and any deep learning framework of your choice. A sample implementation has been provided for the game of Othello in PyTorch and Keras. An accompanying tutorial can be found [here](http://web.stanford.edu/~surag/posts/alphazero.html). We also have implementations for many other games like GoBang and TicTacToe.
 
