@@ -16,6 +16,8 @@ class RunForTheTopGame(Game):
         super().__init__()
         self.n = 8
         self.N_FOURTH_POWER = 8**4
+        self.N_CUBE = 8**3
+        self.N_SQUARE = 8**2
 
     def getInitBoard(self):
         # return initial board (numpy board)
@@ -125,21 +127,20 @@ class RunForTheTopGame(Game):
         print(RunForTheTopGame.displayContent(board))
 
     def _pass_action(self):
+        """The last action in the numpy array of actions is always pass"""
         return self.N_FOURTH_POWER
-
-    #
-
-    def _from_numpy_action_to_move(self, action):
-        c2 = action // self.n ** 3
-        remainder = action % self.n ** 3
-        r2 = remainder // self.n ** 2
-        remainder = action % self.n ** 2
-        c1 = remainder // self.n
-        r1 = action % self.n
-        return ((r1, c1), (r2, c2))
 
     def _from_move_to_numpy_action(self, move):
         """We encode the move as a base N number, where N is the board side length."""
         (r1, c1), (r2, c2) = move
         return r1 + c1 * self.n + r2 * self.n ** 2 + c2 * self.n ** 3
+
+    def _from_numpy_action_to_move(self, action):
+        c2 = action // self.N_CUBE
+        remainder = action % self.N_CUBE
+        r2 = remainder // self.N_SQUARE
+        remainder = action % self.N_SQUARE
+        c1 = remainder // self.n
+        r1 = action % self.n
+        return ((r1, c1), (r2, c2))
 
