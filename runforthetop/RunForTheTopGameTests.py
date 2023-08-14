@@ -86,8 +86,8 @@ class RunForTheTopTests(unittest.TestCase):
         board.set((7, 3), 0)
         board.set((3, 3), 1)
         s = np.array(board.pieces)
-        self.assertEqual(1, game.getGameEnded(s, 1), "player one won")
-        self.assertEqual(1, game.getGameEnded(s, -1), "...for either player")
+        self.assertEqual(1, game.getGameEnded(s, 1), "player 1 won")
+        self.assertEqual(-1, game.getGameEnded(s, -1), "player -1 lost")
 
     def test_game_ended_for_other_player(self):
         game = RunForTheTopGame()
@@ -97,5 +97,5 @@ class RunForTheTopTests(unittest.TestCase):
         board.set((3, 4), -1)
         board.set((3, 5), -1)
         s = np.array(board.pieces)
-        self.assertEqual(-1, game.getGameEnded(s, 1), "player -1 won")
-        self.assertEqual(-1, game.getGameEnded(s, -1), "...for either player")
+        self.assertEqual(1, game.getGameEnded(s, -1), "player -1 won")
+        self.assertEqual(-1, game.getGameEnded(s, 1), "player 1 lost")

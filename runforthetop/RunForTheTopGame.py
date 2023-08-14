@@ -59,10 +59,9 @@ class RunForTheTopGame(Game):
         return np.array(valids)
 
     def getGameEnded(self, board, player):
-        # return 0 if not ended, 1 if player 1 won, -1 if player 1 lost
-        b = Board()
-        b.pieces = np.copy(board)
-        return b.game_status()
+        """return 0 if not ended, 1 if the given player won, -1 if the given player lost"""
+        b = Board.fromState(board)
+        return player * b.game_status()
 
     def getCanonicalForm(self, board, player):
         # return state if player==1, else return -state if player==-1
