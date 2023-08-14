@@ -18,6 +18,7 @@ class Board():
     def __init__(self, n=8):
         """Set up initial board configuration."""
         self.n = n
+        self.HALF_BOARD_SIZE = n//2
         # Create the empty board array.
         self.pieces = [None]*self.n
         for i in range(self.n):
@@ -28,6 +29,12 @@ class Board():
         self.pieces[7][3] = 1
         self.pieces[7][4] = -1
         self.pieces[7][5] = -1
+
+    @classmethod
+    def fromState(cls, state):
+        board = Board()
+        board.pieces = state
+        return board
 
     def __getitem__(self, index):
         """add [][] indexer syntax to the Board"""
@@ -94,4 +101,20 @@ class Board():
     def _available_moves_from_square(self, from_square):
         return [(from_square, to_square) for to_square in self._adjacent_on_board_squares(from_square)
                 if self.at(to_square) == 0]
+
+    def game_status(self):
+        player1 = 0
+        player_minus1 = 0
+        for r in range(0, self.HALF_BOARD_SIZE):
+            for c in range(self.n):
+                if self[r][c] == 1:
+                    player1 += 1
+                elif self[r][c] == -1:
+                    player_minus1 += 1
+        if player1 == 2:
+            return 1
+        elif player_minus1 == 2:
+            return -1
+        else:
+            return 0
 
