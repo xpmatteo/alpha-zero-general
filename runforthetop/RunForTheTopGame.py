@@ -22,10 +22,9 @@ class RunForTheTopGame(Game):
     def getInitBoard(self):
         # return initial board (numpy board)
         b = Board(self.n)
-        return np.array(b.pieces)
+        return b.state()
 
     def getBoardSize(self):
-        # (a,b) tuple
         return (self.n, self.n)
 
     def getActionSize(self):
@@ -36,23 +35,21 @@ class RunForTheTopGame(Game):
         """
         return self.N_FOURTH_POWER + 1
 
-    def getNextState(self, board, player, action):
+    def getNextState(self, state, player, action):
         # if player takes action on board, return next (board,player)
         # action must be a valid move
         if action == self._pass_action():
-            return (board, -player)
-        b = Board(self.n)
-        b.pieces = np.copy(board)        
+            return (state, -player)
+        b = Board.cloneState(state)
         move = self._from_numpy_action_to_move(action)
         b.execute_move(move, player)
         return (b.pieces, -player)
 
-    def getValidMoves(self, board, player):
+    def getValidMoves(self, state, player):
         # return a fixed size binary vector
         valids = [0]*self.getActionSize()
         valids[-1] = 1 # pass is always allowed
-        b = Board(self.n)
-        b.pieces = np.copy(board)
+        b = Board.cloneState(state)
         legalMoves = b.get_legal_moves(player)
         for move in legalMoves:
             valids[self._from_move_to_numpy_action(move)] = 1
@@ -76,11 +73,6 @@ class RunForTheTopGame(Game):
     def stringRepresentationReadable(self, board):
         board_s = "".join(self.square_display_rep[square] for row in board for square in row)
         return board_s
-
-    def getScore(self, board, player):
-        b = Board(self.n)
-        b.pieces = np.copy(board)
-        return b.countDiff(player)
 
     @staticmethod
     def displayContent(board):

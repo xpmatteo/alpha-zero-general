@@ -1,4 +1,4 @@
-
+import numpy as np
 
 class Board():
     """
@@ -34,6 +34,12 @@ class Board():
     def fromState(cls, state):
         board = Board()
         board.pieces = state
+        return board
+
+    @classmethod
+    def cloneState(cls, state):
+        board = Board()
+        board.pieces = np.copy(state)
         return board
 
     def __getitem__(self, index):
@@ -117,4 +123,7 @@ class Board():
             return -1
         else:
             return 0
+
+    def state(self):
+        return np.array(self.pieces)
 
