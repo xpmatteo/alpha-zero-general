@@ -55,28 +55,28 @@ class RunForTheTopGame(Game):
             valids[self._from_move_to_numpy_action(move)] = 1
         return np.array(valids)
 
-    def getGameEnded(self, board, player):
+    def getGameEnded(self, state, player):
         """return 0 if not ended, 1 if the given player won, -1 if the given player lost"""
-        b = Board.fromState(board)
+        b = Board.fromState(state)
         return player * b.game_status()
 
-    def getCanonicalForm(self, board, player):
+    def getCanonicalForm(self, state, player):
         # return state if player==1, else return -state if player==-1
-        return player*board
+        return player*state
 
-    def getSymmetries(self, board, pi):
-        return [(board,pi)]
+    def getSymmetries(self, state, pi):
+        return [(state, pi)]
 
-    def stringRepresentation(self, board):
-        return board.tostring()
+    def stringRepresentation(self, state):
+        return state.tostring()
 
-    def stringRepresentationReadable(self, board):
-        board_s = "".join(self.square_display_rep[square] for row in board for square in row)
+    def stringRepresentationReadable(self, state):
+        board_s = "".join(self.square_display_rep[square] for row in state for square in row)
         return board_s
 
     @staticmethod
-    def displayContent(board):
-        n = board.shape[0]
+    def displayContent(state):
+        n = state.shape[0]
         result = ""
         result += "   "
         for y in range(n):
@@ -86,7 +86,7 @@ class RunForTheTopGame(Game):
         for y in range(n):
             result += str(y) + " |"   # print the row #
             for x in range(n):
-                piece = board[y][x]    # get the piece to print
+                piece = state[y][x]    # get the piece to print
                 result += RunForTheTopGame.square_display_rep[piece] + " "
 
             result += "|\n"
@@ -94,8 +94,8 @@ class RunForTheTopGame(Game):
         return result
 
     @staticmethod
-    def display(board):
-        print(RunForTheTopGame.displayContent(board))
+    def display(state):
+        print(RunForTheTopGame.displayContent(state))
 
     def _pass_action(self):
         """The last action in the numpy array of actions is always pass"""
