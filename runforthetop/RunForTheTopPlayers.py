@@ -27,7 +27,10 @@ class HumanPlayer():
             if actions[i]:
                 valid_actions.append(i)
         for i in range(len(valid_actions)):
-            print("%2d: %s" % (i, Game._from_numpy_action_to_move(valid_actions[i])))
+            if i == len(valid_actions) - 1:
+                print("%2d: %s" % (i, "pass"))
+            else:
+                print("%2d: %s" % (i, Game._from_numpy_action_to_move(valid_actions[i])))
         while True:
             try:
                 input_move = valid_actions[int(input())]
