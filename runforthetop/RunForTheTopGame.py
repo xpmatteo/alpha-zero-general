@@ -5,6 +5,12 @@ from Game import Game
 from .RunForTheTopBoard import Board
 import numpy as np
 
+BOARD_SIDE = 8
+BOARD_SIDE_SQUARE = 8**2
+BOARD_SIDE_CUBE = 8**3
+BOARD_SIDE_FOURTH_POWER = 8**4
+
+
 class RunForTheTopGame(Game):
     square_display_rep = {
         -1: "X",
@@ -41,7 +47,7 @@ class RunForTheTopGame(Game):
         if action == self._pass_action():
             return (state, -player)
         b = Board.cloneState(state)
-        move = self._from_numpy_action_to_move(action)
+        move = RunForTheTopGame._from_numpy_action_to_move(action)
         b.execute_move(move, player)
         return (b.pieces, -player)
 
@@ -52,7 +58,7 @@ class RunForTheTopGame(Game):
         b = Board.cloneState(state)
         legalMoves = b.get_legal_moves(player)
         for move in legalMoves:
-            valids[self._from_move_to_numpy_action(move)] = 1
+            valids[RunForTheTopGame._from_move_to_numpy_action(move)] = 1
         return np.array(valids)
 
     def getGameEnded(self, state, player):
@@ -101,17 +107,19 @@ class RunForTheTopGame(Game):
         """The last action in the numpy array of actions is always pass"""
         return self.N_FOURTH_POWER
 
-    def _from_move_to_numpy_action(self, move):
+    @staticmethod
+    def _from_move_to_numpy_action(move):
         """We encode the move as a base N number, where N is the board side length."""
         (r1, c1), (r2, c2) = move
-        return r1 + c1 * self.n + r2 * self.N_SQUARE + c2 * self.N_CUBE
+        return r1 + c1 * BOARD_SIDE + r2 * BOARD_SIDE_SQUARE + c2 * BOARD_SIDE_CUBE
 
-    def _from_numpy_action_to_move(self, action):
-        c2 = action // self.N_CUBE
-        action = action % self.N_CUBE
-        r2 = action // self.N_SQUARE
-        action = action % self.N_SQUARE
-        c1 = action // self.n
-        r1 = action % self.n
+    @staticmethod
+    def _from_numpy_action_to_move(action):
+        c2 = action // BOARD_SIDE_CUBE
+        action = action % BOARD_SIDE_CUBE
+        r2 = action // BOARD_SIDE_SQUARE
+        action = action % BOARD_SIDE_SQUARE
+        c1 = action // BOARD_SIDE
+        r1 = action % BOARD_SIDE
         return ((r1, c1), (r2, c2))
 

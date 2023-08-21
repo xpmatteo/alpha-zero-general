@@ -1,4 +1,8 @@
 import numpy as np
+from .RunForTheTopGame import RunForTheTopGame as Game
+
+# non-human players always play as Player 1
+NON_HUMAN_PLAYER_NUMBER = 1
 
 
 class RandomPlayer():
@@ -7,41 +11,46 @@ class RandomPlayer():
 
     def play(self, board):
         a = np.random.randint(self.game.getActionSize())
-        valids = self.game.getValidMoves(board, 1)
+        valids = self.game.getValidMoves(board, NON_HUMAN_PLAYER_NUMBER)
         while valids[a]!=1:
             a = np.random.randint(self.game.getActionSize())
         return a
 
 
-class HumanOthelloPlayer():
+def clean_input_move(input_move):
+    return input_move \
+        .replace("(", " ") \
+        .replace(")", " ") \
+        .replace(",", " ")
+
+
+class HumanPlayer():
     def __init__(self, game):
         self.game = game
 
     def play(self, board):
-        # display(board)
         valid = self.game.getValidMoves(board, 1)
         for i in range(len(valid)):
             if valid[i]:
-                print("[", int(i/self.game.n), int(i%self.game.n), end="] ")
+                print("[", Game._from_numpy_action_to_move(i), end="] ")
         while True:
             input_move = input()
-            input_a = input_move.split(" ")
-            if len(input_a) == 2:
+            input_a = clean_input_move(input_move).split()
+            if len(input_a) == 4:
                 try:
-                    x,y = [int(i) for i in input_a]
-                    if ((0 <= x) and (x < self.game.n) and (0 <= y) and (y < self.game.n)) or \
-                            ((x == self.game.n) and (y == 0)):
-                        a = self.game.n * x + y if x != -1 else self.game.n ** 2
-                        if valid[a]:
-                            break
+                    x1,y1,x2,y2 = [int(i) for i in input_a]
+                    move = ((x1,y1), (x2, y2))
+                    action = Game._from_move_to_numpy_action( move )
+                    if valid[action]:
+                        break
                 except ValueError:
                     # Input needs to be an integer
                     'Invalid integer'
             print('Invalid move')
-        return a
+        return action
 
 
-class GreedyOthelloPlayer():
+class GreedyPlayer():
     def __init__(self, game):
         self.game = game
 

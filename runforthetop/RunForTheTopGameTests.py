@@ -45,10 +45,9 @@ class RunForTheTopTests(unittest.TestCase):
             , ((0, 0), (0, 0))
             , ((7, 7), (7, 7))
         ]
-        game = RunForTheTopGame()
         for move in moves:
-            encoded = game._from_move_to_numpy_action(move)
-            decoded = game._from_numpy_action_to_move(encoded)
+            encoded = RunForTheTopGame._from_move_to_numpy_action(move)
+            decoded = RunForTheTopGame._from_numpy_action_to_move(encoded)
             self.assertEqual(move, decoded, "encoding and decoding should be inverse operations")
 
     #

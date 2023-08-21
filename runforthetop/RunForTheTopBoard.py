@@ -79,7 +79,7 @@ class Board():
                         return True
         return False
 
-    def execute_move(self, move):
+    def execute_move(self, move, player):
         from_square, to_square = move
         color = self.at(from_square)
         if color == 0:
