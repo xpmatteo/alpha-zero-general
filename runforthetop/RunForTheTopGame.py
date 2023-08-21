@@ -20,18 +20,14 @@ class RunForTheTopGame(Game):
 
     def __init__(self):
         super().__init__()
-        self.n = 8
-        self.N_FOURTH_POWER = 8**4
-        self.N_CUBE = 8**3
-        self.N_SQUARE = 8**2
 
     def getInitBoard(self):
         # return initial board (numpy board)
-        b = Board(self.n)
+        b = Board(BOARD_SIDE)
         return b.state()
 
     def getBoardSize(self):
-        return (self.n, self.n)
+        return (BOARD_SIDE, BOARD_SIDE)
 
     def getActionSize(self):
         """
@@ -39,7 +35,7 @@ class RunForTheTopGame(Game):
         The number of actions is the number of squares on the board, squared,
         plus 1 for pass
         """
-        return self.N_FOURTH_POWER + 1
+        return BOARD_SIDE_FOURTH_POWER + 1
 
     def getNextState(self, state, player, action):
         # if player takes action on board, return next (board,player)
@@ -105,7 +101,7 @@ class RunForTheTopGame(Game):
 
     def _pass_action(self):
         """The last action in the numpy array of actions is always pass"""
-        return self.N_FOURTH_POWER
+        return BOARD_SIDE_FOURTH_POWER
 
     @staticmethod
     def _from_move_to_numpy_action(move):

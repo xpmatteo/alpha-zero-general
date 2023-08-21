@@ -50,6 +50,6 @@ class RunForTheTopLogicTests(unittest.TestCase):
 
     def test_execute_move(self):
         board = Board()
-        board.execute_move(((7, 2), (6, 1)))
+        board.execute_move(((7, 2), (6, 1)), 1)
         self.assertEqual(1, board[6][1])
         self.assertEqual(0, board[7][2])
