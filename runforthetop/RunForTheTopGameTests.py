@@ -98,3 +98,4 @@ class RunForTheTopTests(unittest.TestCase):
         s = board.state()
         self.assertEqual(1, game.getGameEnded(s, -1), "player -1 won")
         self.assertEqual(-1, game.getGameEnded(s, 1), "player 1 lost")
+
