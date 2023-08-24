@@ -1,18 +1,14 @@
-import argparse
 import os
-import shutil
-import time
-import random
-import numpy as np
-import math
 import sys
+import time
+
+import numpy as np
+
 sys.path.append('../..')
 from utils import *
 from NeuralNet import NeuralNet
 
-import argparse
-
-from .OthelloNNet import OthelloNNet as onnet
+from .RunForTheTopNNet import RunForTheTopNNet as onnet
 
 args = dotdict({
     'lr': 0.001,
@@ -25,9 +21,8 @@ args = dotdict({
 
 class NNetWrapper(NeuralNet):
     def __init__(self, game):
+        super().__init__(game)
         self.nnet = onnet(game, args)
-        self.board_x, self.board_y = game.getBoardSize()
-        self.action_size = game.getActionSize()
 
     def train(self, examples):
         """
@@ -56,9 +51,6 @@ class NNetWrapper(NeuralNet):
         return pi[0], v[0]
 
     def save_checkpoint(self, folder='checkpoint', filename='checkpoint.pth.tar'):
-        # change extension
-        filename = filename.split(".")[0] + ".h5"
-
         filepath = os.path.join(folder, filename)
         if not os.path.exists(folder):
             print("Checkpoint Directory does not exist! Making directory {}".format(folder))
@@ -68,12 +60,9 @@ class NNetWrapper(NeuralNet):
         self.nnet.model.save_weights(filepath)
 
     def load_checkpoint(self, folder='checkpoint', filename='checkpoint.pth.tar'):
-        # change extension
-        filename = filename.split(".")[0] + ".h5"
-
         # https://github.com/pytorch/examples/blob/master/imagenet/main.py#L98
         filepath = os.path.join(folder, filename)
         if not os.path.exists(filepath):
-            raise("No model in path {}".format(filepath))
+            raise Exception("No model in path {}".format(filepath))
 
         self.nnet.model.load_weights(filepath)
