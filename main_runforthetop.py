@@ -4,7 +4,7 @@ import coloredlogs
 
 from Coach import Coach
 from runforthetop.RunForTheTopGame import RunForTheTopGame as Game
-from runforthetop.pytorch.NNet import NNetWrapper as nn
+from runforthetop.keras.NNet import NNetWrapper as nn
 from utils import *
 
 log = logging.getLogger(__name__)
@@ -23,9 +23,8 @@ args = dotdict({
 
     'checkpoint': './temp/',
     'load_model': False,
-    'load_folder_file': ('/dev/models/8x100x50','best.pth.tar'),
+    'load_folder_file': ('temp', 'best.pth.tar'),
     'numItersForTrainExamplesHistory': 20,
-
 })
 
 

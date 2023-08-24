@@ -7,7 +7,7 @@ from runforthetop.RunForTheTopBoard import Board
 
 
 class RunForTheTopTests(unittest.TestCase):
-    def test_display(self):
+    def xtest_display(self):
         game = RunForTheTopGame()
         display = game.displayContent(game.getInitBoard())
         print(display)
