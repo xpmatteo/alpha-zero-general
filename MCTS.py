@@ -1,6 +1,8 @@
 import logging
 import math
 
+from runforthetop.RunForTheTopGame import RunForTheTopGame as Game
+
 import numpy as np
 
 EPS = 1e-8
@@ -8,6 +10,12 @@ EPS = 1e-8
 log = logging.getLogger(__name__)
 
 MAX_SEARCH_DEPTH = 900
+
+def show_probability_distribution(probability_distribution):
+    print("Probability distribution:")
+    for i in range(len(probability_distribution)):
+        if probability_distribution[i] > 0:
+            print("  ", i, ":", Game._from_numpy_action_to_move(i), probability_distribution[i])
 
 class MCTS():
     """
@@ -18,13 +26,16 @@ class MCTS():
         self.game = game
         self.nnet = nnet
         self.args = args
+
+        # Values that are added just once to the node
+        self.Ps = {}  # stores initial policy (returned by neural net)
+        self.Es = {}  # stores game.getGameEnded ended for board s
+        self.Vs = {}  # stores game.getValidMoves for board s
+
+        # Values that are updated at every search iteration
         self.Qsa = {}  # stores Q values for s,a (as defined in the paper)
         self.Nsa = {}  # stores #times edge s,a was visited
         self.Ns = {}  # stores #times board s was visited
-        self.Ps = {}  # stores initial policy (returned by neural net)
-
-        self.Es = {}  # stores game.getGameEnded ended for board s
-        self.Vs = {}  # stores game.getValidMoves for board s
 
     def getActionProb(self, canonicalBoard, temp=1):
         """
@@ -36,6 +47,7 @@ class MCTS():
                    proportional to Nsa[(s,a)]**(1./temp)
         """
         for i in range(self.args.numMCTSSims):
+            self.visited = set()
             self.search(canonicalBoard)
 
         s = self.game.stringRepresentation(canonicalBoard)
@@ -53,7 +65,7 @@ class MCTS():
         probs = [x / counts_sum for x in counts]
         return probs
 
-    def search(self, canonicalBoard, depth=0):
+    def search(self, canonicalBoard):
         """
         This function performs one iteration of MCTS. It is recursively called
         till a leaf node is found. The action chosen at each node is one that
@@ -73,11 +85,10 @@ class MCTS():
             v: the negative of the value of the current canonicalBoard
         """
 
-        if depth > MAX_SEARCH_DEPTH:
-            print("Max search exceeded")
-            return 0
-
         s = self.game.stringRepresentation(canonicalBoard)
+        if s in self.visited:
+            return 1
+        self.visited.add(s)
 
         if s not in self.Es:
             self.Es[s] = self.game.getGameEnded(canonicalBoard, 1)
@@ -127,12 +138,12 @@ class MCTS():
         next_s, next_player = self.game.getNextState(canonicalBoard, 1, a)
         next_s = self.game.getCanonicalForm(next_s, next_player)
 
-        v = self.search(next_s, depth+1)
+        v = self.search(next_s)
 
         if (s, a) in self.Qsa:
+            # Qsa becomes a pseudo-average of the Qsa values
             self.Qsa[(s, a)] = (self.Nsa[(s, a)] * self.Qsa[(s, a)] + v) / (self.Nsa[(s, a)] + 1)
             self.Nsa[(s, a)] += 1
-
         else:
             self.Qsa[(s, a)] = v
             self.Nsa[(s, a)] = 1
