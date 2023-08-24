@@ -87,7 +87,7 @@ class MCTS():
 
         s = self.game.stringRepresentation(canonicalBoard)
         if s in self.visited:
-            return 1
+            return -1
         self.visited.add(s)
 
         if s not in self.Es:
