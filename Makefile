@@ -1,3 +1,3 @@
 
 test:
-	python -m unittest runforthetop/*Tests.py
+	python -m unittest discover -s . -p '*Tests.py'
