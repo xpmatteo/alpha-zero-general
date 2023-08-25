@@ -27,6 +27,9 @@ ARGS = dotdict({
 })
 
 
+TEST_DATA_DIR = 'runforthetop/test-data/'
+
+
 class NNetTests(unittest.TestCase):
     def xtest_write_model_summary(self):
         # write model summary to file
@@ -37,20 +40,19 @@ class NNetTests(unittest.TestCase):
 
     def test_model_is_unchanged(self):
         # compare model summary to saved model summary
-        with open('RunForTheTopNNetTests_model_summary.txt', 'r') as f:
+        with open(TEST_DATA_DIR + 'RunForTheTopNNetTests_model_summary.txt', 'r') as f:
             saved_model_summary = f.read()
             model = RunForTheTopNNet(RunForTheTopGame(), ARGS).model
             self.assertEqual(saved_model_summary, get_model_summary(model))
 
     def test_save_and_restore_checkpoint(self):
-        dir = "/tmp/runforthetop"
+        dirname = "/tmp/runforthetop"
         filename = "foo.keras"
-        self.ensure_empty(dir)
+        self.ensure_empty(dirname)
         net = NNetWrapper(RunForTheTopGame())
-        net.save_checkpoint(folder=dir, filename=filename)
-        net.load_checkpoint(folder=dir, filename=filename)
-        # assert file exists
-        self.assertTrue(os.path.exists(os.path.join(dir, filename)))
+        net.save_checkpoint(folder=dirname, filename=filename)
+        self.assertTrue(os.path.exists(os.path.join(dirname, filename)))
+        net.load_checkpoint(folder=dirname, filename=filename)
 
     @staticmethod
     def ensure_empty(dir):
