@@ -37,7 +37,7 @@ class RunForTheTopTests(unittest.TestCase):
         game = RunForTheTopGame()
         moves = game.getValidMoves(game.getInitBoard(), 1)
         self.assertEqual(8*8*8*8 + 1, len(moves), "should be one move per square squared plus pass")
-        self.assertEqual(1, moves[8**4], "Pass is always a valid move")
+        self.assertEqual(0, moves[8**4], "Pass is not a valid move")
 
     def test_encode_and_decode_of_moves(self):
         moves = [

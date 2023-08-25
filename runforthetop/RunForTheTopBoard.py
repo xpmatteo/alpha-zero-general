@@ -69,16 +69,6 @@ class Board():
                     moves.update(newmoves)
         return list(moves)
 
-    # public
-    def has_legal_moves(self, color):
-        for y in range(self.n):
-            for x in range(self.n):
-                if self[x][y]==color:
-                    newmoves = self.get_moves_for_square((x,y))
-                    if len(newmoves)>0:
-                        return True
-        return False
-
     def execute_move(self, move, player):
         from_square, to_square = move
         color = self.at(from_square)
