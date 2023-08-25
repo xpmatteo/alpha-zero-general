@@ -30,29 +30,41 @@ ARGS = dotdict({
 TEST_DATA_DIR = 'runforthetop/test-data/'
 
 
+def get_saved_model(filename='RunForTheTopNNetTests_model_summary.txt'):
+    with open(TEST_DATA_DIR + filename, 'r') as f:
+        saved_model_summary = f.read()
+    return saved_model_summary
+
+
+def save_model_summary(model, filename='RunForTheTopNNetTests_model_summary.txt'):
+    with open(TEST_DATA_DIR + filename, 'w') as f:
+        f.write(get_model_summary(model))
+
+
 class NNetTests(unittest.TestCase):
-    def xtest_write_model_summary(self):
-        # write model summary to file
-        game = RunForTheTopGame()
-        net = RunForTheTopNNet(game, ARGS)
-        with open('RunForTheTopNNetTests_model_summary.txt', 'w') as f:
-            f.write(get_model_summary(net.model))
+    def setUp(self):
+        self.maxDiff = None
+
+    def xtest_write_model_summary_to_file(self):
+        net = RunForTheTopNNet(RunForTheTopGame(), ARGS)
+        save_model_summary(net.model)
 
     def test_model_is_unchanged(self):
-        # compare model summary to saved model summary
-        with open(TEST_DATA_DIR + 'RunForTheTopNNetTests_model_summary.txt', 'r') as f:
-            saved_model_summary = f.read()
-            model = RunForTheTopNNet(RunForTheTopGame(), ARGS).model
-            self.assertEqual(saved_model_summary, get_model_summary(model))
+        model = RunForTheTopNNet(RunForTheTopGame(), ARGS).model
+        self.assertEqual(get_saved_model(), get_model_summary(model))
 
     def test_save_and_restore_checkpoint(self):
         dirname = "/tmp/runforthetop"
-        filename = "foo.keras"
+        checkpoint_name = "foo.keras"
+        summary_name = "temp.txt"
         self.ensure_empty(dirname)
         net = NNetWrapper(RunForTheTopGame())
-        net.save_checkpoint(folder=dirname, filename=filename)
-        self.assertTrue(os.path.exists(os.path.join(dirname, filename)))
-        net.load_checkpoint(folder=dirname, filename=filename)
+        save_model_summary(net.nnet.model, summary_name)
+        self.assertEqual(get_saved_model(summary_name), get_model_summary(net.nnet.model))
+        net.save_checkpoint(dirname, checkpoint_name)
+        self.assertTrue(os.path.exists(os.path.join(dirname, checkpoint_name)))
+        net.load_checkpoint(dirname, checkpoint_name)
+        self.assertEqual(get_saved_model(summary_name), get_model_summary(net.nnet.model))
 
     @staticmethod
     def ensure_empty(dir):
