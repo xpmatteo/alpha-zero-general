@@ -1,3 +1,5 @@
+import argparse
+
 import Arena
 from MCTS import MCTS
 from runforthetop.RunForTheTopPlayers import *
@@ -12,7 +14,12 @@ use this script to play any two agents against each other, or play manually with
 any agent.
 """
 
-human_vs_cpu = False
+parser = argparse.ArgumentParser()
+parser.add_argument("--num_plays", type=int, default=2, help="number of games to run for")
+parser.add_argument("--human", action="store_true", default=False, help="human vs cpu")
+args = parser.parse_args()
+
+human_vs_cpu = args.human
 
 g = Game()
 
@@ -40,4 +47,4 @@ else:
 
 arena = Arena.Arena(n1p, player2, g, display=Game.display)
 
-print(arena.playGames(2, verbose=True))
+print(arena.playGames(args.num_plays, verbose=True))
