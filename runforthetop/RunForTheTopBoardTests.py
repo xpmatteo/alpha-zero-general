@@ -44,9 +44,12 @@ class RunForTheTopLogicTests(unittest.TestCase):
         board = Board()
         a = (7, 2)
         b = (7, 3)
-        expected = [(a, (6, 1)), (a, (6, 2)), (a, (6, 3)), (b, (6, 2)), (b, (6, 3)), (b, (6, 4)),
-                    (a, (7, 1))]
+        expected = [(a, (6, 1)), (a, (6, 2)), (a, (6, 3)), (b, (6, 2)), (b, (6, 3)), (b, (6, 4)), (a, (7, 1))]
         self.assertEqual(set(expected), set(board.get_legal_moves(1)))
+        c = (7, 4)
+        d = (7, 5)
+        expected = [(c, (6, 3)), (c, (6, 4)), (c, (6, 5)), (d, (6, 4)), (d, (6, 5)), (d, (6, 6)), (d, (7, 6))]
+        self.assertEqual(set(expected), set(board.get_legal_moves(-1)))
 
     def test_execute_move(self):
         board = Board()
