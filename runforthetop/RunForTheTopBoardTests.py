@@ -57,4 +57,11 @@ class RunForTheTopLogicTests(unittest.TestCase):
         self.assertEqual(1, board[6][1])
         self.assertEqual(0, board[7][2])
 
-    # def test_
+    def test_state(self):
+        board = Board()
+        state = board.state()
+        self.assertEqual(1, state[7][2])
+        self.assertEqual(1, state[7][3])
+        self.assertEqual(-1, state[7][4])
+        self.assertEqual(-1, state[7][5])
+        self.assertEqual(0, state[0][0])
