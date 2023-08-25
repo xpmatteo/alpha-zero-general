@@ -50,7 +50,7 @@ class RunForTheTopGame(Game):
     def getValidMoves(self, state, player):
         # return a fixed size binary vector
         valids = [0]*self.getActionSize()
-        valids[-1] = 1 # pass is always allowed
+        valids[-1] = 0
         b = Board.cloneState(state)
         legalMoves = b.get_legal_moves(player)
         for move in legalMoves:
