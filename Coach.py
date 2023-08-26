@@ -40,10 +40,11 @@ class Coach():
         It uses a temp=1 if episodeStep < tempThreshold, and thereafter
         uses temp=0.
 
-        Returns:
-            trainExamples: a list of examples of the form (canonicalBoard, currPlayer, pi,v)
-                           pi is the MCTS informed policy vector, v is +1 if
-                           the player eventually won the game, else -1.
+            Returns: a list (canonicalBoard, pi, v) of examples
+                     where
+                     pi is the MCTS informed policy vector
+                     v is +1 if the player eventually won the game, else -1.
+
         """
         trainExamples = []
         board = self.game.getInitBoard()
@@ -66,6 +67,8 @@ class Coach():
             r = self.game.getGameEnded(board, self.curPlayer)
 
             if r != 0:
+                # game ended
+                # record the result as 1 if the player who was current in this position eventually won, else -1
                 return [(x[0], x[2], r * ((-1) ** (x[1] != self.curPlayer))) for x in trainExamples]
 
     def learn(self):
