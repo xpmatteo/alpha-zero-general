@@ -1,4 +1,5 @@
 import unittest
+import numpy as np
 from runforthetop.RunForTheTopBoard import Board
 
 
@@ -70,7 +71,7 @@ class RunForTheTopLogicTests(unittest.TestCase):
         board = Board()
         state = board.state()
         board2 = Board.fromState(state)
-        self.assertEqual(board.state(), board2.state())
+        self.assertTrue(np.all(board.state() == board2.state()))
 
     def test_clone_state(self):
         board = Board()

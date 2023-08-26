@@ -20,13 +20,16 @@ class RunForTheTopTests(unittest.TestCase):
         self.assertEqual(-1, new_player, "player should be switched")
         self.assertTrue(np.all(board == pieces), "board should not be modified")
 
-    def xtest_get_next_state_move(self):
+    def test_get_next_state_move(self):
         game = RunForTheTopGame()
         board = game.getInitBoard()
         player = 1
-        action = ((7, 2), (6, 1))
-        pieces, new_player = game.getNextState(board, player, action)
-        self.assertEqual(board, game.getInitBoard(), "original board should not be modified")
+        action = RunForTheTopGame._from_move_to_numpy_action(((7, 2), (6, 1)))
+        new_state, new_player = game.getNextState(board, player, action)
+        self.assertEqual(-1, new_player, "player should be switched")
+        new_board = Board.fromState(new_state)
+        self.assertEqual(0, new_board[(7, 2)], "old position should be empty")
+        self.assertEqual(1, new_board[(6, 1)], "new position should be occupied")
 
     def test_available_moves(self):
         game = RunForTheTopGame()
