@@ -63,7 +63,12 @@ class RunForTheTopGame(Game):
         return player * b.game_status()
 
     def getCanonicalForm(self, state, player):
-        # return state if player==1, else return -state if player==-1
+        """
+        The "canonical form" of the board is the board as presented to the neural network.
+        In order for the NN to learn, it must always be presented with "1" as "the pieces you move"
+        return
+            state if player==1, else return -state if player==-1
+        """
         return player*state
 
     def getSymmetries(self, state, pi):
