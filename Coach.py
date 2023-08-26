@@ -66,9 +66,15 @@ class Coach():
 
             r = self.game.getGameEnded(board, self.curPlayer)
 
+            if r == 0 and episodeStep >= self.args.max_turns:
+                # game ended because of max turns
+                # record the result as DRAW
+                r = 0.000001
+
             if r != 0:
                 # game ended
-                # record the result as 1 if the player who was current in this position eventually won, else -1
+                # record the result as r if the player who was current in this position is same player of this turn,
+                # else -r
                 return [(x[0], x[2], r * ((-1) ** (x[1] != self.curPlayer))) for x in trainExamples]
 
     def learn(self):

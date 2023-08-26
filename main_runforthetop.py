@@ -25,6 +25,7 @@ args = dotdict({
     'load_model': False,
     'load_folder_file': ('temp', 'best.keras'),
     'numItersForTrainExamplesHistory': 20,
+    'max_turns': 100,
 })
 
 
