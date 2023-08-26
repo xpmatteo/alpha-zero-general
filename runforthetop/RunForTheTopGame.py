@@ -45,7 +45,7 @@ class RunForTheTopGame(Game):
         b = Board.cloneState(state)
         move = RunForTheTopGame._from_numpy_action_to_move(action)
         b.execute_move(move, player)
-        return (b.pieces, -player)
+        return (b.state(), -player)
 
     def getValidMoves(self, state, player):
         # return a fixed size binary vector
