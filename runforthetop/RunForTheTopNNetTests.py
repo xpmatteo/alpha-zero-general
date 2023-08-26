@@ -45,11 +45,11 @@ class NNetTests(unittest.TestCase):
     def setUp(self):
         self.maxDiff = None
 
-    def xtest_write_model_summary_to_file(self):
+    def test_write_model_summary_to_file(self):
         net = RunForTheTopNNet(RunForTheTopGame(), ARGS)
         save_model_summary(net.model)
 
-    def test_model_is_unchanged(self):
+    def xtest_model_is_unchanged(self):
         model = RunForTheTopNNet(RunForTheTopGame(), ARGS).model
         self.assertEqual(get_saved_model(), get_model_summary(model))
 
