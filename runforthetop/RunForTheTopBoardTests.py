@@ -3,7 +3,14 @@ import numpy as np
 from runforthetop.RunForTheTopBoard import Board
 
 
-class RunForTheTopLogicTests(unittest.TestCase):
+class RunForTheTopBoardTests(unittest.TestCase):
+    def test_board(self):
+        board = Board()
+        self.assertEqual(1, board[(7, 2)])
+        self.assertEqual(1, board[(7, 3)])
+        self.assertEqual(-1, board[(7, 4)])
+        self.assertEqual(-1, board[(7, 5)])
+
     def test_adjacent_squares(self):
         board = Board()
         actual = board._adjacent_squares((2, 4))
@@ -55,17 +62,16 @@ class RunForTheTopLogicTests(unittest.TestCase):
     def test_execute_move(self):
         board = Board()
         board.execute_move(((7, 2), (6, 1)), 1)
-        self.assertEqual(1, board[6][1])
-        self.assertEqual(0, board[7][2])
+        self.assertEqual(1, board[(6, 1)])
+        self.assertEqual(0, board[(7, 2)])
 
     def test_state(self):
         board = Board()
         state = board.state()
-        self.assertEqual(1, state[7][2])
-        self.assertEqual(1, state[7][3])
-        self.assertEqual(-1, state[7][4])
-        self.assertEqual(-1, state[7][5])
-        self.assertEqual(0, state[0][0])
+        self.assertEqual(1, state[(7, 2)].color)
+        self.assertEqual(1, state[(7, 3)].color)
+        self.assertEqual(-1, state[(7, 4)].color)
+        self.assertEqual(-1, state[(7, 5)].color)
 
     def test_from_state(self):
         board = Board()
@@ -78,5 +84,5 @@ class RunForTheTopLogicTests(unittest.TestCase):
         state = board.state()
         board2 = Board.cloneState(state)
         board2_state = board2.state()
-        state[7][2] = 0
-        self.assertEqual(1, board2_state[7][2])
+        state[(7, 2)] = 0
+        self.assertEqual(1, board2_state[(7, 2)].color)
