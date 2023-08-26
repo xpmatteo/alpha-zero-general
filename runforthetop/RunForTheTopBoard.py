@@ -133,3 +133,14 @@ class Board():
         return [(from_square, to_square) for to_square in self._adjacent_on_board_squares(from_square)
                 if self.at(to_square) == 0]
 
+    @classmethod
+    def getCanonicalForm(cls, state, player):
+        array = np.array([0] * 64)
+        for square, unit in state.items():
+            array[cls.canonical_form_index(square)] = unit.color
+        return array
+
+    @classmethod
+    def canonical_form_index(cls, square):
+        return square[0] * 8 + square[1]
+

@@ -86,3 +86,18 @@ class RunForTheTopBoardTests(unittest.TestCase):
         board2_state = board2.state()
         state[(7, 2)] = 0
         self.assertEqual(1, board2_state[(7, 2)].color)
+
+    def test_canonical_board(self):
+        board = Board()
+        state = board.state()
+        canonical_form = Board.getCanonicalForm(state, 1)
+        self.assertEqual(64, len(canonical_form))
+        self.assertEqual(1, canonical_form[Board.canonical_form_index((7, 2))])
+        self.assertEqual(1, canonical_form[Board.canonical_form_index((7, 3))])
+        self.assertEqual(-1, canonical_form[Board.canonical_form_index((7, 4))])
+        self.assertEqual(-1, canonical_form[Board.canonical_form_index((7, 5))])
+        self.assertEqual(0, canonical_form[Board.canonical_form_index((0, 0))])
+        # for row in range(8):
+        #     for col in range(8):
+        #         index = row * 8 + col
+        #         self.assertEquals(state[i], canonical_form[i])
