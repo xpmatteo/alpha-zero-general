@@ -65,3 +65,17 @@ class RunForTheTopLogicTests(unittest.TestCase):
         self.assertEqual(-1, state[7][4])
         self.assertEqual(-1, state[7][5])
         self.assertEqual(0, state[0][0])
+
+    def test_from_state(self):
+        board = Board()
+        state = board.state()
+        board2 = Board.fromState(state)
+        self.assertEqual(board.state(), board2.state())
+
+    def test_clone_state(self):
+        board = Board()
+        state = board.state()
+        board2 = Board.cloneState(state)
+        board2_state = board2.state()
+        state[7][2] = 0
+        self.assertEqual(1, board2_state[7][2])

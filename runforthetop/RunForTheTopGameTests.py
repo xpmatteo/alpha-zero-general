@@ -7,11 +7,6 @@ from runforthetop.RunForTheTopBoard import Board
 
 
 class RunForTheTopTests(unittest.TestCase):
-    def xtest_display(self):
-        game = RunForTheTopGame()
-        display = game.displayContent(game.getInitBoard())
-        print(display)
-
     def test_action_size(self):
         game = RunForTheTopGame()
         self.assertEqual(game.getActionSize(), 8*8*8*8 + 1)
