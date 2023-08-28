@@ -1,15 +1,16 @@
 import logging
 
-import coloredlogs
-
 from Coach import Coach
 from runforthetop.RunForTheTopGame import RunForTheTopGame as Game
 from runforthetop.keras.NNet import NNetWrapper as nn
 from utils import *
 
 log = logging.getLogger(__name__)
+logging.basicConfig()
+logging.root.setLevel(logging.INFO)
 
-coloredlogs.install(level='INFO')  # Change this to DEBUG to see more info.
+#import coloredlogs
+#coloredlogs.install(level='INFO')  # Change this to DEBUG to see more info.
 
 args = dotdict({
     'numIters': 1000,
