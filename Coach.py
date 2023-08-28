@@ -78,7 +78,7 @@ class Coach():
                 # else -r
                 return [(self.game.toNetworkInput(x[0]), x[2], r * ((-1) ** (x[1] != curPlayer))) for x in trainExamples]
 
-    def execute_many_episodes(self, num_episodes, total_episodes):
+    def execute_many_episodes(self, num_episodes):
         """
         This function executes many episodes.
         It then returns the training examples from all the episodes, concatenated together
@@ -88,8 +88,22 @@ class Coach():
             mcts = MCTS(self.game, self.nnet, self.args)  # reset search tree
             examples += self.executeEpisode(mcts)
             self.episodeCount += 1
-            print(f'Episodes: {self.episodeCount}/{total_episodes}', end='\r')
+            print(f'Episodes: {self.episodeCount}/{self.args.numEps}', end='\r')
+        print('Terminating thread')
         return examples
+
+    def self_play_in_parallel(self, num_threads, num_episodes):
+        """
+        This function executes many episodes in parallel.
+        It then returns the training examples from all the episodes, concatenated together
+        """
+        from multiprocessing import Pool
+        from functools import partial
+
+        with Pool(num_threads) as p:
+            episodes_per_thread = num_episodes // num_threads
+            examples = p.map(self.execute_many_episodes, [episodes_per_thread] * num_threads)
+        return [item for sublist in examples for item in sublist]
 
     def learn(self):
         """
@@ -108,7 +122,7 @@ class Coach():
                 iterationTrainExamples = deque([], maxlen=self.args.maxlenOfQueue)
 
                 log.info('Self Play ...')
-                iterationTrainExamples += self.execute_many_episodes(3, 3)
+                iterationTrainExamples += self.self_play_in_parallel(self.args.num_threads, self.args.numEps)
 
                 # save the iteration examples to the history 
                 self.trainExamplesHistory.append(iterationTrainExamples)
