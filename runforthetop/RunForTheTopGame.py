@@ -81,7 +81,8 @@ class RunForTheTopGame(Game):
 
     @staticmethod
     def displayContent(state):
-        n = state.shape[0]
+        n = 8
+        b = Board.fromState(state)
         result = ""
         result += "   "
         for y in range(n):
@@ -91,7 +92,7 @@ class RunForTheTopGame(Game):
         for y in range(n):
             result += str(y) + " |"   # print the row #
             for x in range(n):
-                piece = state[y][x]    # get the piece to print
+                piece = b[(y, x)]    # get the piece to print
                 result += RunForTheTopGame.square_display_rep[piece] + " "
 
             result += "|\n"

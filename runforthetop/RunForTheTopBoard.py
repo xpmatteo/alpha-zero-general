@@ -1,9 +1,18 @@
+from typing import Any
+
 import numpy as np
+from dataclasses import dataclass
 
 
+@dataclass
 class Unit():
-    def __init__(self, color):
-        self.color = color
+    color: int
+
+    def canonicalize(self, player):
+        if player == 1:
+            return self
+        else:
+            return Unit(-self.color)
 
 
 class Board():
@@ -135,12 +144,22 @@ class Board():
 
     @classmethod
     def getCanonicalForm(cls, state, player):
-        array = np.array([0] * 64)
-        for square, unit in state.items():
-            array[cls.canonical_form_index(square)] = unit.color
-        return array
+        value = state.copy()
+        for square, unit in value.items():
+            value[square] = unit.canonicalize(player)
+        return value
 
     @classmethod
     def canonical_form_index(cls, square):
         return square[0] * 8 + square[1]
+
+    @classmethod
+    def to_network_input(cls, state):
+        n = 8
+        array = [None] * n
+        for i in range(n):
+            array[i] = [0] * n
+        for square, unit in state.items():
+            array[square[0]][square[1]] = unit.color
+        return np.array(array)
 

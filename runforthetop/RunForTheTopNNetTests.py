@@ -71,4 +71,14 @@ class NNetTests(unittest.TestCase):
         shutil.rmtree(dir)
         os.makedirs(dir)
 
+    def test_predict(self):
+        game = RunForTheTopGame()
+        state = game.getInitBoard()
+        net = RunForTheTopNNet(game, ARGS)
+        canonical_form = game.getCanonicalForm(state, 1)
+        pi, v = net.predict(canonical_form)
+        valids = game.getValidMoves(canonical_form, 1)
+        self.Ps[s] = self.Ps[s] * valids  # masking invalid moves
+        sum_Ps_s = np.sum(self.Ps[s])
+        self.assertTrue(sum_Ps_s > 0)
 

@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from runforthetop.RunForTheTopBoard import Board
+from runforthetop.RunForTheTopBoard import Board, Unit
 
 
 class RunForTheTopBoardTests(unittest.TestCase):
@@ -87,17 +87,37 @@ class RunForTheTopBoardTests(unittest.TestCase):
         state[(7, 2)] = 0
         self.assertEqual(1, board2_state[(7, 2)].color)
 
-    def test_canonical_board(self):
+    def test_to_network_input(self):
+        board = Board()
+        state = board.state()
+        canonical_form = Board.to_network_input(state)
+        self.assertEqual(1, canonical_form[7][2])
+        self.assertEqual(1, canonical_form[7][3])
+        self.assertEqual(-1, canonical_form[7][4])
+        self.assertEqual(-1, canonical_form[7][5])
+        self.assertEqual(0, canonical_form[0][0])
+        self.assertEqual(8, len(canonical_form))
+        self.assertEqual(8, len(canonical_form[0]))
+
+    def test_canonical_board_player_1(self):
+        self.maxDiff = None
         board = Board()
         state = board.state()
         canonical_form = Board.getCanonicalForm(state, 1)
-        self.assertEqual(64, len(canonical_form))
-        self.assertEqual(1, canonical_form[Board.canonical_form_index((7, 2))])
-        self.assertEqual(1, canonical_form[Board.canonical_form_index((7, 3))])
-        self.assertEqual(-1, canonical_form[Board.canonical_form_index((7, 4))])
-        self.assertEqual(-1, canonical_form[Board.canonical_form_index((7, 5))])
-        self.assertEqual(0, canonical_form[Board.canonical_form_index((0, 0))])
-        # for row in range(8):
-        #     for col in range(8):
-        #         index = row * 8 + col
-        #         self.assertEquals(state[i], canonical_form[i])
+        self.assertEqual(state, canonical_form)
+
+    def test_canonical_board_player_minus_1(self):
+        board = Board()
+        state = board.state()
+        canonical_form = Board.getCanonicalForm(state, -1)
+        self.assertEqual(-1, canonical_form[(7, 2)].color)
+        self.assertEqual(-1, canonical_form[(7, 3)].color)
+        self.assertEqual(1, canonical_form[(7, 4)].color)
+        self.assertEqual(1, canonical_form[(7, 5)].color)
+        # expected = {
+        #     (7, 2): Unit(-1),
+        #     (7, 3): Unit(-1),
+        #     (7, 4): Unit(1),
+        #     (7, 5): Unit(1),
+        # }
+        # self.assertEqual(expected, canonical_form)
