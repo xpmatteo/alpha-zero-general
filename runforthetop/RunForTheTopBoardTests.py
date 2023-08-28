@@ -83,9 +83,8 @@ class RunForTheTopBoardTests(unittest.TestCase):
         board = Board()
         state = board.state()
         board2 = Board.cloneState(state)
-        board2_state = board2.state()
         state[(7, 2)] = 0
-        self.assertEqual(1, board2_state[(7, 2)])
+        self.assertEqual(1, board2[(7, 2)])
 
     def test_to_network_input(self):
         board = Board()

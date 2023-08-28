@@ -69,11 +69,14 @@ class RunForTheTopGame(Game):
         """
         return Board.getCanonicalForm(state, player)
 
+    def toNetworkInput(self, state):
+        return Board.to_network_input(state)
+
     def getSymmetries(self, state, pi):
         return [(state, pi)]
 
     def stringRepresentation(self, state):
-        return state.tostring()
+        return str(state)
 
     def stringRepresentationReadable(self, state):
         board_s = "".join(self.square_display_rep[square] for row in state for square in row)
