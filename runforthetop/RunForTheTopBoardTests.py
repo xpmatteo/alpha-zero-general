@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from runforthetop.RunForTheTopBoard import Board, Unit
+from runforthetop.RunForTheTopBoard import Board
 
 
 class RunForTheTopBoardTests(unittest.TestCase):
@@ -68,10 +68,10 @@ class RunForTheTopBoardTests(unittest.TestCase):
     def test_state(self):
         board = Board()
         state = board.state()
-        self.assertEqual(1, state[(7, 2)].color)
-        self.assertEqual(1, state[(7, 3)].color)
-        self.assertEqual(-1, state[(7, 4)].color)
-        self.assertEqual(-1, state[(7, 5)].color)
+        self.assertEqual(1, state[(7, 2)])
+        self.assertEqual(1, state[(7, 3)])
+        self.assertEqual(-1, state[(7, 4)])
+        self.assertEqual(-1, state[(7, 5)])
 
     def test_from_state(self):
         board = Board()
@@ -85,7 +85,7 @@ class RunForTheTopBoardTests(unittest.TestCase):
         board2 = Board.cloneState(state)
         board2_state = board2.state()
         state[(7, 2)] = 0
-        self.assertEqual(1, board2_state[(7, 2)].color)
+        self.assertEqual(1, board2_state[(7, 2)])
 
     def test_to_network_input(self):
         board = Board()
@@ -110,14 +110,7 @@ class RunForTheTopBoardTests(unittest.TestCase):
         board = Board()
         state = board.state()
         canonical_form = Board.getCanonicalForm(state, -1)
-        self.assertEqual(-1, canonical_form[(7, 2)].color)
-        self.assertEqual(-1, canonical_form[(7, 3)].color)
-        self.assertEqual(1, canonical_form[(7, 4)].color)
-        self.assertEqual(1, canonical_form[(7, 5)].color)
-        # expected = {
-        #     (7, 2): Unit(-1),
-        #     (7, 3): Unit(-1),
-        #     (7, 4): Unit(1),
-        #     (7, 5): Unit(1),
-        # }
-        # self.assertEqual(expected, canonical_form)
+        self.assertEqual(-1, canonical_form[(7, 2)])
+        self.assertEqual(-1, canonical_form[(7, 3)])
+        self.assertEqual(1, canonical_form[(7, 4)])
+        self.assertEqual(1, canonical_form[(7, 5)])

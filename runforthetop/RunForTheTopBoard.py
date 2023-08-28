@@ -4,17 +4,6 @@ import numpy as np
 from dataclasses import dataclass
 
 
-@dataclass
-class Unit():
-    color: int
-
-    def canonicalize(self, player):
-        if player == 1:
-            return self
-        else:
-            return Unit(-self.color)
-
-
 class Board():
     """
     Author: Eric P. Nichols; modified by Matteo Vaccari
@@ -30,10 +19,10 @@ class Board():
         """Set up initial board configuration."""
         self.n = n
         self.units = {
-                (7, 2): Unit(1),
-                (7, 3): Unit(1),
-                (7, 4): Unit(-1),
-                (7, 5): Unit(-1),
+                (7, 2): 1,
+                (7, 3): 1,
+                (7, 4): -1,
+                (7, 5): -1,
         }
 
     @classmethod
@@ -54,16 +43,12 @@ class Board():
     def __getitem__(self, index):
         """add [(r, c)] indexer syntax to the Board"""
         if index in self.units:
-            return self.units[index].color
+            return self.units[index]
         return 0
 
     def at(self, square):
         """ get square color from a pair (r,c) """
         return self[(square[0],square[1])]
-
-    # def set(self, square, color):
-    #     """ set color of square (r,c)"""
-    #     self[square[0]][square[1]] = color
 
     def get_legal_moves(self, color):
         """Returns all the legal moves for the given color.
@@ -145,8 +130,8 @@ class Board():
     @classmethod
     def getCanonicalForm(cls, state, player):
         value = state.copy()
-        for square, unit in value.items():
-            value[square] = unit.canonicalize(player)
+        for square, color in value.items():
+            value[square] = color * player
         return value
 
     @classmethod
@@ -160,6 +145,6 @@ class Board():
         for i in range(n):
             array[i] = [0] * n
         for square, unit in state.items():
-            array[square[0]][square[1]] = unit.color
+            array[square[0]][square[1]] = unit
         return np.array(array)
 
