@@ -28,8 +28,9 @@ class Coach():
         self.mcts = MCTS(self.game, self.nnet, self.args)
         self.trainExamplesHistory = []  # history of examples from args.numItersForTrainExamplesHistory latest iterations
         self.skipFirstSelfPlay = False  # can be overriden in loadTrainExamples()
+        self.episodeCount = 0
 
-    def executeEpisode(self):
+    def executeEpisode(self, mcts):
         """
         This function executes one episode of self-play, starting with player 1.
         As the game is played, each turn is added as a training example to
@@ -56,7 +57,7 @@ class Coach():
             canonicalBoard = self.game.getCanonicalForm(board, curPlayer)
             temp = int(episodeStep < self.args.tempThreshold)
 
-            pi = self.mcts.getActionProb(canonicalBoard, temp=temp)
+            pi = mcts.getActionProb(canonicalBoard, temp=temp)
             sym = self.game.getSymmetries(canonicalBoard, pi)
             for b, p in sym:
                 trainExamples.append([b, curPlayer, p, None])
@@ -75,7 +76,20 @@ class Coach():
                 # game ended
                 # record the result as r if the player who was current in this position is same player of this turn,
                 # else -r
-                return [(x[0], x[2], r * ((-1) ** (x[1] != curPlayer))) for x in trainExamples]
+                return [(self.game.toNetworkInput(x[0]), x[2], r * ((-1) ** (x[1] != curPlayer))) for x in trainExamples]
+
+    def execute_many_episodes(self, num_episodes, total_episodes):
+        """
+        This function executes many episodes.
+        It then returns the training examples from all the episodes, concatenated together
+        """
+        examples = []
+        for _ in range(num_episodes):
+            mcts = MCTS(self.game, self.nnet, self.args)  # reset search tree
+            examples += self.executeEpisode(mcts)
+            self.episodeCount += 1
+            print(f'Episodes: {self.episodeCount}/{total_episodes}', end='\r')
+        return examples
 
     def learn(self):
         """
@@ -93,9 +107,8 @@ class Coach():
             if not self.skipFirstSelfPlay or i > 1:
                 iterationTrainExamples = deque([], maxlen=self.args.maxlenOfQueue)
 
-                for _ in tqdm(range(self.args.numEps), desc="Self Play"):
-                    self.mcts = MCTS(self.game, self.nnet, self.args)  # reset search tree
-                    iterationTrainExamples += self.executeEpisode()
+                log.info('Self Play ...')
+                iterationTrainExamples += self.execute_many_episodes(3, 3)
 
                 # save the iteration examples to the history 
                 self.trainExamplesHistory.append(iterationTrainExamples)
