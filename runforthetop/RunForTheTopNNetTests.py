@@ -3,6 +3,8 @@ import os
 import shutil
 import unittest
 
+import numpy as np
+
 from runforthetop.RunForTheTopGame import RunForTheTopGame
 from runforthetop.keras.RunForTheTopNNet import RunForTheTopNNet
 from runforthetop.keras.NNet import NNetWrapper
@@ -45,11 +47,11 @@ class NNetTests(unittest.TestCase):
     def setUp(self):
         self.maxDiff = None
 
-    def test_write_model_summary_to_file(self):
+    def xtest_write_model_summary_to_file(self):
         net = RunForTheTopNNet(RunForTheTopGame(), ARGS)
         save_model_summary(net.model)
 
-    def xtest_model_is_unchanged(self):
+    def test_aaa_model_is_unchanged(self):
         model = RunForTheTopNNet(RunForTheTopGame(), ARGS).model
         self.assertEqual(get_saved_model(), get_model_summary(model))
 
@@ -74,11 +76,11 @@ class NNetTests(unittest.TestCase):
     def test_predict(self):
         game = RunForTheTopGame()
         state = game.getInitBoard()
-        net = RunForTheTopNNet(game, ARGS)
+        net = NNetWrapper(game)
         canonical_form = game.getCanonicalForm(state, 1)
-        pi, v = net.predict(canonical_form)
+        pi, v = net.predict(game.toNetworkInput(canonical_form))
         valids = game.getValidMoves(canonical_form, 1)
-        self.Ps[s] = self.Ps[s] * valids  # masking invalid moves
-        sum_Ps_s = np.sum(self.Ps[s])
+        valid_pi = pi * valids  # masking invalid moves
+        sum_Ps_s = np.sum(valid_pi)
         self.assertTrue(sum_Ps_s > 0)
 
